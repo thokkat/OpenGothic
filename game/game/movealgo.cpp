@@ -211,6 +211,12 @@ void MoveAlgo::tickJumpup(uint64_t dt) {
     }
   }
 
+void MoveAlgo::marvinJump() {
+  setAsSwim(false);
+  setAsDive(false);
+  setInAir (true);
+  }
+
 void MoveAlgo::tickClimb(uint64_t dt) {
   if(npc.bodyStateMasked()!=BS_CLIMB) {
     setAsClimb(false);

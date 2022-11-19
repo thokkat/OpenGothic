@@ -507,6 +507,10 @@ void Npc::clearSpeed() {
   mvAlgo.clearSpeed();
   }
 
+void Npc::marvinJump() {
+  mvAlgo.marvinJump();
+  }
+
 void Npc::setProcessPolicy(ProcessPolicy t) {
   if(aiPolicy==t)
     return;
