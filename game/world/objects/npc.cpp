@@ -507,10 +507,6 @@ void Npc::clearSpeed() {
   mvAlgo.clearSpeed();
   }
 
-void Npc::marvinJump() {
-  mvAlgo.marvinJump();
-  }
-
 void Npc::setProcessPolicy(ProcessPolicy t) {
   if(aiPolicy==t)
     return;
@@ -1015,6 +1011,10 @@ bool Npc::isSlide() const {
 
 bool Npc::isInAir() const {
   return mvAlgo.isInAir();
+  }
+
+void Npc::invalidatePhysics(const Tempest::Vec3& dp) {
+  mvAlgo.invalidatePhysics(dp);
   }
 
 void Npc::setTalentSkill(Talent t, int32_t lvl) {

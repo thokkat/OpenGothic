@@ -159,7 +159,6 @@ class Npc final {
     void       setPhysic     (DynamicWorld::NpcItem&& item);
     void       setFatness    (float f);
     void       setScale      (float x,float y,float z);
-    void       marvinJump    ();
 
     bool       setAnim(Anim a);
     auto       setAnimAngGet(Anim a) -> const Animation::Sequence*;
@@ -184,6 +183,7 @@ class Npc final {
     bool       isInWater() const;
     bool       isDive() const;
     bool       isCasting() const;
+    void       invalidatePhysics(const Tempest::Vec3& dp);
 
     void       setTalentSkill(Talent t,int32_t lvl);
     int32_t    talentSkill(Talent t) const;

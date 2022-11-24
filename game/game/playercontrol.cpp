@@ -386,25 +386,18 @@ void PlayerControl::marvinF8(uint64_t dt) {
   float s   = std::sin(rot), c = std::cos(rot);
 
   Tempest::Vec3 dp(s,0.8f,-c);
-  dp *= 6000*float(dt)/1000.f;
+  dp*=6000*float(dt)/1000.f;
+  pos += dp;
 
   pl.changeAttribute(ATR_HITPOINTS,pl.attribute(ATR_HITPOINTSMAX),false);
   pl.changeAttribute(ATR_MANA,     pl.attribute(ATR_MANAMAX),     false);
   pl.clearState(false);
-
-  if (pl.isSwim()) {
-    auto waterRay = pl.world().physic()->waterRay(pos);
-    auto res      = pl.world().physic()->ray(pos,{pos.x,20000,pos.z});
-    auto gl       = pl.guild();
-    float chest   = float(pl.world().script().guildVal().water_depth_chest[gl]);
-    if ((waterRay.hasCol && pos.y+chest>waterRay.wdepth) || (!res.hasCol && !waterRay.hasCol))
-      pl.marvinJump();
-    }
-  pos += dp;
   pl.setPosition(pos);
   pl.clearSpeed();
   pl.quitIneraction();
   pl.setAnim(AnimationSolver::Idle);
+  if (pl.isSwim())
+    pl.invalidatePhysics(dp);
 
   if(auto c = Gothic::inst().camera())
     c->reset();
@@ -415,24 +408,22 @@ void PlayerControl::marvinK(uint64_t dt) {
   if (w == nullptr || w->player() == nullptr)
     return;
 
-  auto& pl  = *w->player();
-  auto  pos = pl.position();
-  float rot = pl.rotationRad();
-  float s = std::sin(rot), c = std::cos(rot);
-  Tempest::Vec3 dp(s, 0.0f, -c);
-  dp *= 6000 * float(dt) / 1000.f;
+  auto& pl   = *w->player();
+  auto  pos  = pl.position();
+  float rot  = pl.rotationRad();
+  float rotY = pl.isDive() ? pl.rotationYRad() : 0.f;
+  float s    = std::sin(rot), c = std::cos(rot);
+
+  Tempest::Vec3 dp(s,rotY, -c);
+  dp  *= 6000*float(dt)/1000.f;
+  pos += dp;
 
   pl.clearState(false);
-  if (pl.isSwim()) {
-    auto waterRay = pl.world().physic()->waterRay(pos);
-    auto res      = pl.world().physic()->ray(pos,{pos.x,20000,pos.z});
-    if (!res.hasCol && !waterRay.hasCol)
-      pl.marvinJump();
-    }
-  pos += dp;
   pl.setPosition(pos);
   pl.clearSpeed();
   pl.quitIneraction();
+  if (pl.isSwim())
+    pl.invalidatePhysics(dp);
   // pl.setAnim(AnimationSolver::Idle); // Original G2 behaviour: K doesn't stop running
   }
 

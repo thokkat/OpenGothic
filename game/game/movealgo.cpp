@@ -211,12 +211,6 @@ void MoveAlgo::tickJumpup(uint64_t dt) {
     }
   }
 
-void MoveAlgo::marvinJump() {
-  setAsSwim(false);
-  setAsDive(false);
-  setInAir (true);
-  }
-
 void MoveAlgo::tickClimb(uint64_t dt) {
   if(npc.bodyStateMasked()!=BS_CLIMB) {
     setAsClimb(false);
@@ -711,6 +705,34 @@ void MoveAlgo::startDive() {
       auto  water = waterRay(pos);
       tryMove(0,water-chest-pY,0);
       }
+    }
+  }
+
+void MoveAlgo::invalidatePhysics(const Tempest::Vec3& dp) {
+  auto         pos           = npc.position();
+  bool         validW        = false;
+  const  float fallThreshold = stepHeight();
+  const  float worldHeight   = 20000;
+  static float water;
+  const  float waterHeight   = waterRay(pos-dp, &validW);
+
+  if(validW)
+    water = waterHeight;
+  if(pos.y+fallThreshold>water) {
+    setAsSwim(false);
+    setAsDive(false);
+    setInAir (true);
+    return;
+    }
+
+  auto path = npc.world().physic()->ray(pos-dp,pos);
+  if(path.hasCol) {
+    auto sky = npc.world().physic()->ray(Tempest::Vec3(pos.x,worldHeight,pos.z),pos);
+    if (sky.hasCol)
+      npc.setPosition(sky.v+Tempest::Vec3(0,5*fallThreshold,0));
+    setAsSwim(false);
+    setAsDive(false);
+    setInAir (true);
     }
   }
 
