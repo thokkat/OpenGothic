@@ -15,7 +15,6 @@
 
 const float DynamicWorld::ghostPadding=50-22.5f;
 const float DynamicWorld::ghostHeight =140;
-const float DynamicWorld::worldHeight =20000;
 
 struct DynamicWorld::HumShape:btCapsuleShape {
   HumShape(btScalar radius, btScalar height):btCapsuleShape((height<=0.f ? 0.f : radius)*0.01f,height*0.01f) {}

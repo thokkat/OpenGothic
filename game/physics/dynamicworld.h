@@ -38,6 +38,7 @@ class DynamicWorld final {
     static constexpr float gravity     = gravityMS*100.f/(1000.f*1000.f); // centimeters per milliseconds^2
     static constexpr float bulletSpeed = 3; // centimeters per milliseconds
     static constexpr float spellSpeed  = 1; // centimeters per milliseconds
+    static constexpr float worldHeight = 20000;
     static const     float ghostPadding;
 
     DynamicWorld(World &world, const phoenix::mesh& mesh);
@@ -284,5 +285,4 @@ class DynamicWorld final {
     std::unique_ptr<BBoxList>          bboxList;
 
     static const float                 ghostHeight;
-    static const float                 worldHeight;
   };

@@ -414,7 +414,7 @@ void PlayerControl::marvinK(uint64_t dt) {
   float rotY = pl.isDive() ? pl.rotationYRad() : 0.f;
   float s    = std::sin(rot), c = std::cos(rot);
 
-  Tempest::Vec3 dp(s,rotY, -c);
+  Tempest::Vec3 dp(s,rotY,-c);
   dp  *= 6000*float(dt)/1000.f;
   pos += dp;
 
