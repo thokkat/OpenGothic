@@ -53,7 +53,7 @@ class MoveAlgo final {
 
     bool    startClimb(JumpStatus ani);
     void    startDive();
-    void    invalidatePhysics(const Tempest::Vec3& dp);
+    void    invalidatePhysics();
 
     bool    isFaling()  const;
     bool    isSlide()   const;

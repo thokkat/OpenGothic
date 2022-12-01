@@ -336,6 +336,10 @@ void CollisionWorld::setBBox(const btVector3& min, const btVector3& max) {
   bbox[1] = max;
   }
 
+float CollisionWorld::worldHeight() const {
+  return bbox[1].y()*100.f;
+  }
+
 void CollisionWorld::setItemHitCallback(std::function<void(Item&, phoenix::material_group, float, float)> f) {
   hitItem = f;
   }

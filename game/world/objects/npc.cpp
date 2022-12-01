@@ -1013,8 +1013,8 @@ bool Npc::isInAir() const {
   return mvAlgo.isInAir();
   }
 
-void Npc::invalidatePhysics(const Tempest::Vec3& dp) {
-  mvAlgo.invalidatePhysics(dp);
+void Npc::invalidatePhysics() {
+  mvAlgo.invalidatePhysics();
   }
 
 void Npc::setTalentSkill(Talent t, int32_t lvl) {

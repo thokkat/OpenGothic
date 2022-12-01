@@ -466,16 +466,20 @@ DynamicWorld::DynamicWorld(World& owner,const phoenix::mesh& worldMesh) {
 DynamicWorld::~DynamicWorld(){
   }
 
+float DynamicWorld::worldHeight() const {
+  return world->worldHeight();
+  }
+
 DynamicWorld::RayLandResult DynamicWorld::landRay(const Tempest::Vec3& from, float maxDy) const {
   world->updateAabbs();
   if(maxDy==0)
-    maxDy = worldHeight;
+    maxDy = worldHeight();
   return ray(Tempest::Vec3(from.x,from.y+ghostPadding,from.z), Tempest::Vec3(from.x,from.y-maxDy,from.z));
   }
 
 DynamicWorld::RayWaterResult DynamicWorld::waterRay(const Tempest::Vec3& from) const {
   world->updateAabbs();
-  return implWaterRay(from, Tempest::Vec3(from.x,from.y+worldHeight,from.z));
+  return implWaterRay(from, Tempest::Vec3(from.x,from.y+worldHeight(),from.z));
   }
 
 DynamicWorld::RayWaterResult DynamicWorld::implWaterRay(const Tempest::Vec3& from, const Tempest::Vec3& to) const {
@@ -508,7 +512,7 @@ DynamicWorld::RayWaterResult DynamicWorld::implWaterRay(const Tempest::Vec3& fro
     float waterY = callback.m_hitPointWorld.y()*100.f;
     auto  cave   = ray(from,Tempest::Vec3(to.x,waterY,to.z));
     if(cave.hasCol && cave.v.y<waterY) {
-      ret.wdepth = from.y-worldHeight;
+      ret.wdepth = from.y-worldHeight();
       ret.hasCol = false;
       } else {
       ret.wdepth = waterY;
@@ -517,7 +521,7 @@ DynamicWorld::RayWaterResult DynamicWorld::implWaterRay(const Tempest::Vec3& fro
     return ret;
     }
 
-  ret.wdepth = from.y-worldHeight;
+  ret.wdepth = from.y-worldHeight();
   ret.hasCol = false;
   return ret;
   }

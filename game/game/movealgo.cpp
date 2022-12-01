@@ -708,30 +708,17 @@ void MoveAlgo::startDive() {
     }
   }
 
-void MoveAlgo::invalidatePhysics(const Tempest::Vec3& dp) {
-  auto  pos           = npc.position();
-  float fallThreshold = stepHeight();
-  float worldHeight   = DynamicWorld::worldHeight;
-  auto  pathRay       = npc.world().physic()->ray(pos-dp,pos);
-  auto  skyRay        = npc.world().physic()->ray(Tempest::Vec3(pos.x,worldHeight,pos.z),pos);
-  bool  validW        = false;
-  waterRay(pos,&validW);
+void MoveAlgo::invalidatePhysics() {
+  auto pos    = npc.position();
+  auto water  = npc.world().physic()->waterRay(pos);
+  auto ground = npc.world().physic()->landRay(pos);
 
-  if(pathRay.hasCol) {
-    if (skyRay.hasCol)
-      npc.setPosition(skyRay.v+Tempest::Vec3(0,5*fallThreshold,0));
-    setAsSwim(false);
-    setAsDive(false);
-    setInAir (true);
-    return;
-    }
-
-  if (!validW) {
-    auto groundRay = npc.world().physic()->ray(pos,Tempest::Vec3(pos.x,-worldHeight,pos.z));
-    if (skyRay.hasCol && groundRay.hasCol) {
-      bool validWG = false;
-      waterRay({groundRay.v.x,groundRay.v.y+1.f,groundRay.v.z},&validWG);
-      if (!validWG)
+  if (!water.hasCol || !ground.hasCol) {
+    float worldHeight = npc.world().physic()->worldHeight();
+    auto  sky         = npc.world().physic()->landRay(pos,-worldHeight);
+    if (ground.hasCol && sky.hasCol) {
+      auto waterGround = npc.world().physic()->waterRay({ground.v.x,ground.v.y+1.f,ground.v.z});
+      if (!waterGround.hasCol)
         return;
       }
     setAsSwim(false);

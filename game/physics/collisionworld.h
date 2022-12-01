@@ -35,6 +35,8 @@ class CollisionWorld : public btDiscreteDynamicsWorld {
     void setBBox(const btVector3& min, const btVector3& max);
     void setItemHitCallback(std::function<void(Item& itm,phoenix::material_group mat,float impulse,float mass)> f);
 
+    float worldHeight() const;
+
     void updateAabbs() override;
     void touchAabbs();
 

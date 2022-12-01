@@ -386,8 +386,7 @@ void PlayerControl::marvinF8(uint64_t dt) {
   float s   = std::sin(rot), c = std::cos(rot);
 
   Tempest::Vec3 dp(s,0.8f,-c);
-  dp*=6000*float(dt)/1000.f;
-  pos += dp;
+  pos += dp*6000*float(dt)/1000.f;
 
   pl.changeAttribute(ATR_HITPOINTS,pl.attribute(ATR_HITPOINTSMAX),false);
   pl.changeAttribute(ATR_MANA,     pl.attribute(ATR_MANAMAX),     false);
@@ -397,7 +396,7 @@ void PlayerControl::marvinF8(uint64_t dt) {
   pl.quitIneraction();
   pl.setAnim(AnimationSolver::Idle);
   if (pl.isSwim())
-    pl.invalidatePhysics(dp);
+    pl.invalidatePhysics();
 
   if(auto c = Gothic::inst().camera())
     c->reset();
@@ -415,15 +414,14 @@ void PlayerControl::marvinK(uint64_t dt) {
   float s    = std::sin(rot), c = std::cos(rot);
 
   Tempest::Vec3 dp(s,rotY,-c);
-  dp  *= 6000*float(dt)/1000.f;
-  pos += dp;
+  pos += dp*6000*float(dt)/1000.f;
 
   pl.clearState(false);
   pl.setPosition(pos);
   pl.clearSpeed();
   pl.quitIneraction();
   if (pl.isSwim())
-    pl.invalidatePhysics(dp);
+    pl.invalidatePhysics();
   // pl.setAnim(AnimationSolver::Idle); // Original G2 behaviour: K doesn't stop running
   }
 
