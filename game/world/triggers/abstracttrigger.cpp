@@ -203,6 +203,10 @@ void AbstractTrigger::disableTicks() {
   world.disableTicks(*this);
   }
 
+bool AbstractTrigger::isTicksEnabled() const {
+  return ticksEnabled;
+}
+
 const std::vector<Npc*>& AbstractTrigger::intersections() const {
   return boxNpc.intersections();
   }

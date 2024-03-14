@@ -13,36 +13,35 @@ class CsCamera : public AbstractTrigger {
     bool isPlayerMovable() const;
 
   private:
+    using CameraMotion = zenkit::CameraMotion;
+
     struct KeyFrame {
-      float         time = 0;
-      Tempest::Vec3 c[4] = {};
+      float         time       = 0;
+      Tempest::Vec3 position   = {};
+      CameraMotion  motionType = CameraMotion::SMOOTH;
+      float speed() const;
       };
 
-    struct KbSpline {
-      float                 c[3]     = {};
-      float                 splTime  = 0;
-      std::vector<KeyFrame> keyframe;
-      size_t size() const { return keyframe.size(); }
-      auto   position() const -> Tempest::Vec3;
-      void   setSplTime(float t);
-      float  applyMotionScaling(float t) const;
+    struct Trajectory {
+      std::vector<KeyFrame> keyframes;
+      size_t size() const { return keyframes.size(); }
+      auto   position(uint64_t time) const -> Tempest::Vec3;
+      float  applyMotionScaling(uint64_t time) const;
       };
 
     void onTrigger(const TriggerEvent& evt) override;
     void onUntrigger(const TriggerEvent& evt) override;
     void tick(uint64_t dt) override;
 
-    auto position() -> Tempest::Vec3;
-    auto spin(Tempest::Vec3& d) -> Tempest::PointF;
+    auto position() const -> Tempest::Vec3;
+    auto spin(Tempest::Vec3& d) const -> Tempest::PointF;
 
-    bool     active        = false;
-    bool     godMode       = false;
-    bool     playerMovable = false;
-    bool     autoUntrigger = false;
-    float    durationF     = 0;
-    uint64_t duration      = 0;
-    uint64_t delay         = 0;
-    uint64_t time          = 0;
-    KbSpline posSpline     = {};
-    KbSpline targetSpline  = {};
+    bool       godMode       = false;
+    bool       playerMovable = false;
+    bool       autoUntrigger = false;
+    uint64_t   duration      = 0;
+    uint64_t   delay         = 0;
+    uint64_t   time          = 0;
+    Trajectory posSpline     = {};
+    Trajectory targetSpline  = {};
   };
